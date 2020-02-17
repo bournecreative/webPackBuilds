@@ -1,0 +1,15 @@
+body {
+  background-color: cyan;
+  font-family: Helvetica, Arial, sans-serif; }
+
+.container {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1270px; }
+
+.hero h1 {
+  font-size: 52px;
+  color: #383232;
+  margin: 0;
+  text-align: center; }
+
