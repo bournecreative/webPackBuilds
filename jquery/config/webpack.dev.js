@@ -1,21 +1,32 @@
 const path = require("path")
+const webpack = require("webpack")
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
 
 module.exports = {
+    mode: "development",
     entry: {
         main: "./src/js/main.js"
     },
-    mode: "development",
     output: {
-        filename: "[name]-bundle.js",
+        publicPath: '/',
         path: path.resolve(__dirname, "../dist"),
-        publicPath: '/'
+        filename: "[name]-bundle.js"
     },
     devServer: {
         contentBase: "dist",
         overlay: true
+    },
+    optimization: {
+        splitChunks: {
+            chunks: 'all',
+            cacheGroups: {
+                vendor: {
+                    name: "vendor"
+                }
+            }
+        },
     },
     module: {
         rules: [
@@ -26,22 +37,21 @@ module.exports = {
             },
             {
                 test: /\.s[ac]ss$/i,
-                use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
+                use: [MiniCssExtractPlugin.loader, "css-loader", "postcss-loader", "sass-loader"]
             }
         ]
     },
-    optimization: {
-        splitChunks: {
-            // include all types of chunks
-            chunks: 'all'
-        }
-    },
     plugins: [
+        new HtmlWebpackPlugin({
+            template: 'src/index.html'
+        }),
         new MiniCssExtractPlugin({
             filename: "[name].css"
         }),
-        new HtmlWebpackPlugin({
-            template: 'src/index.html'
+        new webpack.DefinePlugin({
+            "process.env": {
+                NODE_ENV: JSON.stringify("development")
+            }
         }),
         new BrowserSyncPlugin({
             proxy: 'http://localhost:8080/',

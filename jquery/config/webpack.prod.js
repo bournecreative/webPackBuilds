@@ -1,4 +1,5 @@
 const path = require("path")
+const webpack = require("webpack")
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
@@ -32,13 +33,12 @@ module.exports = {
             },
             {
                 test: /\.s[ac]ss$/i,
-                use: [{
-                    loader: MiniCssExtractPlugin.loader
-                }, {
-                    loader: "css-loader"
-                }, {
-                    loader: "sass-loader"
-                }]
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    "css-loader",
+                    "postcss-loader",
+                    "sass-loader"
+                ]
             }
         ]
     },
@@ -49,6 +49,11 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: "[name].css"
         }),
-        new OptimizeCSSAssetsPlugin()
+        new OptimizeCSSAssetsPlugin(),
+        new webpack.DefinePlugin({
+            "process.env": {
+                NODE_ENV: JSON.stringify("production")
+            }
+        })
     ]
 }
