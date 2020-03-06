@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "clean": "rimraf dist/",
-    "dev": "webpack --config=config/webpack.dev.js",
+    "clean": "rimraf dist",
+    "dev": "npm run clean && webpack --config=config/webpack.dev.js",
     "server": "webpack-dev-server --config=config/webpack.dev.js",
-    "prod": "webpack --config=config/webpack.prod.js -p"
+    "prod": "npm run clean && webpack --config=config/webpack.prod.js -p"
   },
   "keywords": [],
   "author": "",
