@@ -1,9 +1,7 @@
 import "../scss/styles.scss";
 
-
 const esArrow = () => {
-    console.log("running es6")
+    console.log("hot reloading is working now")
 }
-
 
 esArrow()

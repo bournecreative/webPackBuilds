@@ -1,17 +1,28 @@
 const path = require("path")
+const webpack = require("webpack")
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 
 module.exports = {
-    entry: {
-        main: ["./src/js/main.js"]
-    },
     mode: "production",
+    entry: {
+        main: "./src/js/main.js",
+    },
     output: {
-        filename: "[name]-bundle.js",
+        publicPath: '/',
         path: path.resolve(__dirname, "../dist"),
-        publicPath: '/'
+        filename: "[name]-bundle.js"
+    },
+    optimization: {
+        splitChunks: {
+            chunks: 'all',
+            cacheGroups: {
+                vendor: {
+                    name: "vendor"
+                }
+            }
+        },
     },
     module: {
         rules: [
@@ -22,16 +33,27 @@ module.exports = {
             },
             {
                 test: /\.s[ac]ss$/i,
-                use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    "css-loader",
+                    "postcss-loader",
+                    "sass-loader"
+                ]
             }
         ]
     },
     plugins: [
-        new MiniCssExtractPlugin({
-            filename: "[name].css"
-        }),
         new HtmlWebpackPlugin({
             template: 'src/index.html'
         }),
-        new OptimizeCSSAssetsPlugin()]
+        new MiniCssExtractPlugin({
+            filename: "[name].css"
+        }),
+        new OptimizeCSSAssetsPlugin(),
+        new webpack.DefinePlugin({
+            "process.env": {
+                NODE_ENV: JSON.stringify("production")
+            }
+        })
+    ]
 }
